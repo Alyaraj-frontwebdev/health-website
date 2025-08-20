@@ -65,7 +65,7 @@ footer {
 
 .hero h1 {
   font-size: clamp(2.8rem, 6vw, 4rem);    /* large, clean font */
-  font-weight: 700;
+  font-weight: 200;
   letter-spacing: -0.02em;
   margin-left: 9%;
   margin-top: 20%;
@@ -103,10 +103,10 @@ button.cta:hover { background-color: var(--primary); border: var(--primary); col
   display: flex;
   justify-content: center;
   flex-direction: column;
- 
+  align-items: center;
   gap: 60px;
   padding: 90px 20px;
-  height: 200vh;
+  
 }
 
 /* ---------- Footer ---------- */
@@ -114,6 +114,11 @@ footer {
   justify-content: center;
   font-size: 0.9rem;
   color: var(--mid-gray);
+}
+@media (max-width: 768px){
+  button.cta{
+    text-decoration: none;
+  }
 }
 .auth-container{
   display: flex;
@@ -187,37 +192,103 @@ footer {
 .signup-form input, .signup-form button{
   width: 100%;
 }
-.toggle-container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 5rem;
-}
-.toggle-wrapper{
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  padding: 5px 10px;
-  border-radius: 25px;
-  background-color: #525254;
-  width: fit-content;
-  box-shadow: 0px 0px 20px 10px rgb(48, 48, 48);
-}
-.toggle-wrapper span{
-  color: white;
-  padding: 5px 10px;
-  border-radius: 20px;
-  transition: 0.3s ease-in-out;
-  cursor: pointer;
-}
-.main-body{
+
+
+.main-body {
+  min-height: 100vh; /* 👈 Use 100dvh instead of 100vh or 100% */
+  width: 100vw;
   background-color: #1c1c1e;
-  width: 100%;
-  height: 100vh;
+  overflow-x: hidden;
   
 }
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  height: 56px;
+  background-color: #2c2c2e;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
+.navbar .heal-logo {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
 
+.nav-links {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-links span {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: transparent;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.nav-links span.active {
+  background-color: black;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-btn {
+  background-color: #ff3b30;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.logout-btn:hover {
+  background-color: #e04343;
+}
+.menu-btn {
+  background: none;
+  color: white;
+  font-size: 1.5rem;
+  display: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background-color: #3a3a3c;
+    padding: 1rem;
+    display: none;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .logout-btn {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+  }
+}
 
 
 
@@ -269,6 +340,7 @@ footer {
   height: 4rem;
   border: 1px solid #aaa;
   border-radius: 30px;
+  margin-bottom: 1rem;
 }
 
 .chat-input-area input {
@@ -401,6 +473,13 @@ footer {
   max-height: 100%;
   overflow-y: auto;
 }
+.fitplan-form{
+  width: 100%;
+  max-width: 650px;
+  margin: auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
 .form-row {
   display: flex;
   gap: 10px;
@@ -417,18 +496,29 @@ footer {
   color: white;
 }
 .goal-input{
+  display: flex;
+  align-items: center;
+  gap: 10px;
   border: 1px solid white;
   border-radius: 30px;
   padding: 5px 7px;
+  flex-wrap: nowrap; /* Prevent items from wrapping */
+  width: 100%;
+  box-sizing: border-box;
 }
 .goal-input > #fit-goal-id{
   border: none;
   outline: none;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
+  flex: 1;
+  min-width: 0; /* IMPORTANT */
+  background: transparent;
+  color: white;
 }
 
 .goal-input > #goal-btn {
-  padding: 10px 11px;
+    flex-shrink: 0; /* Prevent the button from shrinking */
+  padding: 5px 5px;
   border: none;
   border-radius: 50%;
   background-color: #007bff;
@@ -493,6 +583,7 @@ footer {
 
 .reminder-list-item {
   display: flex;
+  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
   background: #2b2b2b;
@@ -512,52 +603,6 @@ footer {
   padding: 8px;
   font-size: 1.2rem;
   cursor: pointer;
-}
-
-
-
-.breathing-content h1{
-  font-weight: 100;
-  font-size: 3rem;
-}
-.breathing-content button{
-  border: 1px solid white;
-  border-radius: 30px;
-  font-size: 2rem;
-  color: white;
-  background: transparent;
-  padding: 10px 25px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-}
-.breathing-content button:hover{
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-.breathing-content .phase{
-  font-size: 2rem;
-  font-weight: 100;
-}
-.breathing-content .count{
-  font-size: 2rem;
-  font-weight: 100;
-}
-.breathingAnimation{
-  animation: imageHovering 3s infinite ease-in-out;
-}
-@keyframes imageHovering {
-  0%{
-    transform: translateY(0px);
-  }
-  25%{
-    transform: translateY(10px);
-  }
-  50%{
-    transform: translateY(-10px);
-  }
-  100%{
-    transform: translateY(0px);
-  }
 }
 
 
@@ -659,16 +704,35 @@ footer {
 
 
 
-
-
+.featureContent{
+    width: 550px;
+  }
+.feat1image,.feat2image{
+    width: 350px;
+    height: 450px;
+    border-radius: 10px;
+  }
+  .feat4image{
+     width: 450px;
+    height: 350px;
+    border-radius: 10px;
+  }
 
 @media (max-width: 768px) {
-  header {
+  .landing-header {
     padding: 10px 20px;
     flex-direction: column;
     align-items: flex-start;
   }
 
+  .featureContent{
+    width: 350px;
+  }
+.feat4image{
+     width: 350px;
+    height: 300px;
+    border-radius: 10px;
+  }
   footer {
     flex-direction: column;
     align-items: center;
@@ -685,14 +749,18 @@ footer {
     padding: 80px 20px;
     height: auto;
   }
+  .hero-wrapper{
+    margin-top: 5rem;
+  }
 
   .hero h1 {
     margin: 0;
     font-size: 2.5rem;
+    font-weight: 200;
   }
 
   .hero p {
-    margin: 0;
+    margin: auto;
     font-size: 1rem;
     max-width: 90%;
   }
@@ -706,13 +774,30 @@ footer {
   button.cta {
     margin: 20px auto;
     display: block;
-    width: 90%;
+    width: 60%;
+    text-decoration: none;
   }
 
   .features {
-    padding: 60px 20px;
+    
     height: auto;
     gap: 2rem;
+  }
+  .feat1content, .feat2content{
+    flex-direction: column;
+    object-fit: contain;
+    width: 350px;
+  }
+  .feat1image,.feat2image{
+    width: 350px;
+    height: 450px;
+    border-radius: 10px;
+  }
+  .features h1{
+    font-size: 1.5rem;
+  }
+  .features p{
+    font-size: 1rem;
   }
 
   .auth-container {
@@ -752,6 +837,12 @@ footer {
     width: 100%;
     padding: 0 10px;
   }
+  .chat-input-area {
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
 }
 
 
@@ -806,8 +897,7 @@ footer {
     width: 100%;
     font-size: 1.1rem;
   }
-
-  .form-row {
+  .form-selector{
     flex-direction: column;
     gap: 10px;
   }
@@ -826,7 +916,6 @@ footer {
   }
 
   .reminder-list-item {
-    flex-direction: column;
     align-items: flex-start;
     gap: 10px;
     font-size: 0.95rem;

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, setPersistence,signInWithPopup, 
+  browserLocalPersistence } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -13,31 +14,22 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-
-  // ✅ Redirect if user is already logged in
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        router.push('/app');
+  
+     useEffect(() => {
+  // Set persistence first
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => getRedirectResult(auth))
+    .then((result) => {
+      if (result?.user) {
+        console.log("Redirect login success:", result.user);
+        router.push("/app");
       }
+    })
+    .catch((error) => {
+      console.error("Redirect error:", error);
     });
-    return () => unsubscribe();
-  }, [router]);
+}, []);
 
-  // ✅ Handle redirect login (Google)
-  useEffect(() => {
-    const checkGoogleRedirect = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          router.push('/app');
-        }
-      } catch (error) {
-        console.error("Redirect login failed", error);
-      }
-    };
-    checkGoogleRedirect();
-  }, [router]);
 
   const handleLogin = async () => {
     try {
@@ -49,13 +41,19 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    try {
-      googleProvider.setCustomParameters({ prompt: 'select_account' });
-      await signInWithRedirect(auth, googleProvider);
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+      try {
+    // Try signInWithPopup first
+    const result = await signInWithPopup(auth, googleProvider);
+    console.log("Popup login successful:", result.user);
+    router.push("/app");
+  } catch (popupError) {
+    // If popup blocked (common on mobile), fallback to redirect
+    console.warn("Popup failed, falling back to redirect:", popupError);
+    await signInWithRedirect(auth, googleProvider);
+  }
+    
+  }
+    
 
   return (
     <div className="auth-container">
@@ -70,7 +68,7 @@ export default function Login() {
             <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
             <button className='signup-btn' onClick={handleLogin}>LOGIN</button>
-            <span>------------------Or---------------------</span>
+            <span>------------Or------------</span>
             <button className='google-btn' onClick={handleGoogleLogin}>
               <Image src={googleLogo} alt="Google" width={30} height={30} />
               Continue with Google

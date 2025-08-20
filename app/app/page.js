@@ -1,21 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import GeminiChat from '../../components/GeminiChat';
 import FitnessGoal from '../../components/FitnessGoal';
 import Reminder from '@/components/Reminder';
 import WeatherAdvice from '@/components/WeatherAdvice';
-import BreathingTimer from '@/components/BreathingTimer';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/navigation';
 
 
 const tabs = [
   { id: 'health', label: 'Health Advisor', component: <GeminiChat /> },
   { id: 'fitness', label: 'Fitness Planner', component: <FitnessGoal /> },
   { id: 'reminder', label: 'Reminder', component: <Reminder /> },
-  { id: 'weather', label: 'Weather Advice', component: <WeatherAdvice /> },
-  { id: 'breathing', label: 'Breathing Timer', component: <BreathingTimer /> },
+  { id: 'weather', label: 'AOI Advisor', component: <WeatherAdvice /> },
 ];
 
 export default function AppPage() {
@@ -23,6 +22,8 @@ export default function AppPage() {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('health');
   const activeComponent = tabs.find((tab) => tab.id === activeTab)?.component;
+  const [menuOpen, setMenuOpen] = useState(false);
+
 
 
   useEffect(() => {
@@ -30,39 +31,54 @@ export default function AppPage() {
     return () => unsub();
   }, []);
 
-  useEffect(() => {
-    if(user==null){
-      router.push('/login');
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');// Redirect to login or landing page
+    } catch (error) {
+      console.error("Logout error:", error);
     }
-  }, [user])
+  };
 
 
   return (
-    <main className='main-body'>
+    <main className="main-body">
       {user ? (
         <>
-          <div className='toggle-container'>
-            <div className='toggle-wrapper'>
+          <header className="navbar">
+            <div className="heal-logo">AI Health</div>
+
+            <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
               {tabs.map((tab) => (
                 <span
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    background: activeTab === tab.id ? 'black' : 'transparent'
+                  onClick={() => {
+                    setActiveTab(tab.id)
+                    setMenuOpen(false)
                   }}
+                  className={activeTab === tab.id ? 'active' : ''}
                 >
                   {tab.label}
                 </span>
               ))}
+            </nav>
+
+            <div className="actions">
+              <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+                ☰
+              </button>
+              <button onClick={handleLogout} className="logout-btn">
+                Logout
+              </button>
             </div>
-          </div>
-          <div>
-            {activeComponent}
-          </div>
+          </header>
+
+          <div style={{marginTop: '56px'}}>{activeComponent}</div>
         </>
       ) : (
         <p style={{ textAlign: 'center' }}>Please log in to use AI features.</p>
       )}
     </main>
+
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { createUserWithEmailAndPassword, updateProfile, signInWithRedirect } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInWithRedirect, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../lib/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -26,12 +26,16 @@ export default function Signup() {
   };
 
   const handleGoogleSignup = async () => {
-    try {
-      await signInWithRedirect(auth, googleProvider);
-      router.push('/app');
-    } catch (err) {
-      alert(err.message);
-    }
+     try {
+    // Try signInWithPopup first
+    const result = await signInWithPopup(auth, googleProvider);
+    console.log("Popup login successful:", result.user);
+    router.push("/app");
+  } catch (popupError) {
+    // If popup blocked (common on mobile), fallback to redirect
+    console.warn("Popup failed, falling back to redirect:", popupError);
+    await signInWithRedirect(auth, googleProvider);
+  }
   };
 
   return (
@@ -45,7 +49,7 @@ export default function Signup() {
             <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
             <button className='signup-btn' onClick={handleSignup}>SIGN UP</button>
-            <span style={{ fontFamily: 'inherit' }}>------------------Or---------------------</span>
+            <span style={{ fontFamily: 'inherit' }}>-------------Or--------------</span>
             <button className='google-btn' onClick={handleGoogleSignup}><Image src={googleLogo} alt="Google" width={30} height={30} /> Sign Up with Google</button>
             <p>Already have an account? <Link href="/login">Login</Link></p>
           </div>

@@ -103,7 +103,7 @@ Make it simple, healthy, and easy to follow.
           color: 'white',
           fontWeight: 100,
         }}>Fill your details</h1>
-        <div className='form-row'>
+        <div className='form-row form-selector'>
           <input
             type="text"
             name="age"
@@ -126,7 +126,7 @@ Make it simple, healthy, and easy to follow.
           </select>
         </div>
 
-        <div className='form-row'>
+        <div className='form-row form-selector'>
           <input
             type="text"
             name="height"
@@ -147,7 +147,7 @@ Make it simple, healthy, and easy to follow.
 
         </div>
 
-        <div className='form-row'>
+        <div className='form-row form-selector'>
           <select
             name="bodyType"
             value={formData.bodyType}
@@ -175,7 +175,7 @@ Make it simple, healthy, and easy to follow.
           </select>
         </div>
 
-        <div className='form-row goal-input'>
+        <div className='form-row goal-input' style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <input
             type='text'
             name="goal"

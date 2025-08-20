@@ -87,7 +87,7 @@ function WeatherAdvice() {
 
             {/* Right AI Advice */}
             <div className="advice-section">
-                <h3>AI Health Advice</h3>
+                <h3>AI Advice Based On AQI</h3>
                 <div className="advice-box">
                     <ReactMarkdown>{aqiAdvice}</ReactMarkdown>
                 </div>
