@@ -5,7 +5,6 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import GeminiChat from '../../components/GeminiChat';
 import FitnessGoal from '../../components/FitnessGoal';
-import Reminder from '@/components/Reminder';
 import WeatherAdvice from '@/components/WeatherAdvice';
 import { useRouter } from 'next/navigation';
 
@@ -13,7 +12,6 @@ import { useRouter } from 'next/navigation';
 const tabs = [
   { id: 'health', label: 'Health Advisor', component: <GeminiChat /> },
   { id: 'fitness', label: 'Fitness Planner', component: <FitnessGoal /> },
-  { id: 'reminder', label: 'Reminder', component: <Reminder /> },
   { id: 'weather', label: 'AOI Advisor', component: <WeatherAdvice /> },
 ];
 
