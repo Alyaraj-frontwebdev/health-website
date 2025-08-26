@@ -3,7 +3,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { marked } from "marked";
-import puppeteer from "puppeteer";
+import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
 import { fileToDataUrl, qrDataUrl } from "@/utils/fileHelpers";
 import { calcBMI, calcBMR, calcTDEE, macroSplit } from "@/utils/healthCalc";
 
@@ -216,10 +217,19 @@ export async function POST(req) {
 </body>
 </html>`;
 
-    const browser = await puppeteer.launch({ headless: "new", args: ["--no-sandbox","--disable-setuid-sandbox"] });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
-    await page.emulateMediaType("screen");
+    const browser = await puppeteer.launch({
+  args: chromium.args,
+  executablePath: process.env.AWS_EXECUTION_ENV
+    ? await chromium.executablePath   // Vercel
+    : undefined,                      // Local
+  headless: chromium.headless,
+});
+
+const page = await browser.newPage(); // you missed this
+
+await page.setContent(html, { waitUntil: "networkidle0" });
+await page.emulateMediaType("screen");
+
     // make sure charts exist before printing
     await page.waitForSelector("#pieChart", { visible: true, timeout: 15000 });
     await page.waitForFunction("window.__chartsReady === true", { timeout: 15000 });
