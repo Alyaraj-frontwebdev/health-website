@@ -69,6 +69,7 @@ footer {
   letter-spacing: -0.02em;
   margin-left: 9%;
   margin-top: 20%;
+  color: #161616;
   
 }
 
@@ -125,6 +126,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #ffff;
   height: 100vh;
 }
 .auth-wrapper{
@@ -138,10 +140,13 @@ footer {
   flex-direction: column;
   gap: 1rem;
   padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 20px;
 }
 .main-signup h2{
   font-size: 3rem;
   font-weight: 400;
+  color: #0000;
 }
 .main-signup input{
   padding: 10px 20px;

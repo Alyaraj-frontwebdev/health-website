@@ -42,16 +42,16 @@ export default function Signup() {
     <div className="auth-container">
       <div className='auth-wrapper'>
         <div className='main-signup'>
-          <h3 style={{display:'flex', alignItems: 'center', gap: '0.8rem'}}><Image src={appLogo} width={36} height={38} style={{borderRadius: '50%'}} alt='App Name'/>Healieve</h3>
-          <h2>Let's Get Started</h2>
+          <h3 style={{display:'flex', alignItems: 'center', gap: '0.8rem', color: 'black'}}><Image src={appLogo} width={36} height={38} style={{borderRadius: '50%'}} alt='App Name'/>Healieve</h3>
+          <h2 style={{color: 'black'}}>Let's Get Started</h2>
           <div className='signup-form'>
             <input type="text" placeholder="Full Name" onChange={e => setFullName(e.target.value)} />
             <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
             <button className='signup-btn' onClick={handleSignup}>SIGN UP</button>
-            <span style={{ fontFamily: 'inherit' }}>-------------Or--------------</span>
+            <span style={{ fontFamily: 'inherit', color: 'black' }}>-------------Or--------------</span>
             <button className='google-btn' onClick={handleGoogleSignup}><Image src={googleLogo} alt="Google" width={30} height={30} /> Sign Up with Google</button>
-            <p>Already have an account? <Link href="/login">Login</Link></p>
+            <p style={{color: 'black'}}>Already have an account? <Link href="/login">Login</Link></p>
           </div>
         </div>
         <div className='signup-img-container'>

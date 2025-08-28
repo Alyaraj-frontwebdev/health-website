@@ -3,8 +3,16 @@ import { useState, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { FaDownload, FaWandMagicSparkles } from "react-icons/fa6";
 import { calcBMI} from "@/utils/healthCalc";
+import { useRef, useEffect } from "react";
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
+import { Line } from "react-chartjs-2";
+
+
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 export default function FitnessPlanner() {
+  const chartRef = useRef(null);
+  const [isChartReady, setIsChartReady] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -26,24 +34,123 @@ export default function FitnessPlanner() {
 
   // Demo exercises (replace or populate from AI)
   const [exercises] = useState([
-    {
-      id: "pushup",
-      name: "Push-up",
-      equipment: "Bodyweight",
-      muscles: ["Chest", "Triceps"],
-      reps: "3 x 10–12",
-      tempo: "2-0-1",
-      rest: "60s",
-      difficulty: "Beginner",
-      mainImage: "/exercises/pushup/main.jpg",
-      steps: [
-        { image: "/exercises/pushup/step1.jpg", caption: "Start in plank" },
-        { image: "/exercises/pushup/step2.jpg", caption: "Lower chest" },
-        { image: "/exercises/pushup/step3.jpg", caption: "Press up" },
-      ],
-      demoVideo: "https://example.com/videos/pushup.mp4",
-      description: "Keep your core braced; neutral neck.",
-    },
+  {
+    name: "Push-up",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    reps: "3 x 10-12",
+    tempo: "2-0-1",
+    rest: "60s",
+    description: "Keep your core braced; neutral neck.",
+    muscles: ["Chest", "Triceps"],
+    mainImageB64: "https://yourcdn.com/pushup.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=IODxDxX7oi4",
+    steps: [
+      { caption: "Start in plank", imageB64: "https://yourcdn.com/pushup-step1.jpg" },
+      { caption: "Lower chest", imageB64: "https://yourcdn.com/pushup-step2.jpg" },
+      { caption: "Press up", imageB64: "https://yourcdn.com/pushup-step3.jpg" }
+    ]
+  },
+  {
+    name: "Chin-up",
+    equipment: "Pull-up Bar",
+    difficulty: "Intermediate",
+    reps: "3 x 8-10",
+    tempo: "2-0-1",
+    rest: "90s",
+    description: "Pull with your back, not just arms.",
+    muscles: ["Back", "Biceps"],
+    mainImageB64: "https://yourcdn.com/chinup.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=brhRXlOhsAM",
+    steps: [
+      { caption: "Grab bar underhand", imageB64: "https://yourcdn.com/chinup-step1.jpg" },
+      { caption: "Pull to chin", imageB64: "https://yourcdn.com/chinup-step2.jpg"},
+      { caption: "Lower slowly", imageB64: "https://yourcdn.com/chinup-step3.jpg" }
+    ]
+  },
+  {
+    name: "Squat",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    reps: "3 x 15-20",
+    tempo: "3-1-1",
+    rest: "60s",
+    description: "Keep chest up and knees aligned with toes.",
+    muscles: ["Quads", "Glutes", "Hamstrings"],
+    mainImageB64: "https://yourcdn.com/squat.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=aclHkVaku9U",
+    steps: [
+      { caption: "Stand tall", imageB64: "https://yourcdn.com/squat-step1.jpg" },
+      { caption: "Lower to 90°", imageB64: "https://yourcdn.com/squat-step2.jpg" },
+      { caption: "Push through heels", imageB64: "https://yourcdn.com/squat-step3.jpg" }
+    ]
+  },
+  {
+    name: "Plank",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    reps: "3 x 30-60 sec hold",
+    tempo: "Static Hold",
+    rest: "45s",
+    description: "Keep your body in a straight line from head to heels.",
+    muscles: ["Core", "Shoulders"],
+    mainImageB64: "https://yourcdn.com/plank.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=pSHjTRCQxIw",
+    steps: [
+      { caption: "Forearms on ground", imageB64: "https://yourcdn.com/plank-step1.jpg" },
+      { caption: "Engage core", imageB64: "https://yourcdn.com/plank-step2.jpg" }
+    ]
+  },
+  {
+    name: "Burpee",
+    equipment: "Bodyweight",
+    difficulty: "Intermediate",
+    reps: "3 x 12-15",
+    tempo: "Explosive",
+    rest: "75s",
+    description: "Full-body explosive exercise for conditioning.",
+    muscles: ["Full Body", "Cardio"],
+    mainImageB64: "https://yourcdn.com/burpee.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=TU8QYVW0gDU",
+    steps: [
+      { caption: "Drop into squat", imageB64: "https://yourcdn.com/burpee-step1.jpg" },
+      { caption: "Kick legs back", imageB64: "https://yourcdn.com/burpee-step2.jpg" },
+      { caption: "Push-up & jump", imageB64: "https://yourcdn.com/burpee-step3.jpg" }
+    ]
+  },
+  {
+    name: "Mountain Climbers",
+    equipment: "Bodyweight",
+    difficulty: "Intermediate",
+    reps: "3 x 30 sec",
+    tempo: "Fast",
+    rest: "45s",
+    description: "Drive knees to chest quickly while keeping core tight.",
+    muscles: ["Core", "Cardio"],
+    mainImageB64: "https://yourcdn.com/mountainclimbers.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=nmwgirgXLYM",
+    steps: [
+      { caption: "Start in plank", imageB64: "https://yourcdn.com/mountainclimber-step1.jpg" },
+      { caption: "Drive knees fast", imageB64: "https://yourcdn.com/mountainclimber-step2.jpg" }
+    ]
+  },
+  {
+    name: "Glute Bridge",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    reps: "3 x 12-15",
+    tempo: "2-1-2",
+    rest: "60s",
+    description: "Engage glutes and avoid arching lower back.",
+    muscles: ["Glutes", "Hamstrings"],
+    mainImageB64: "https://yourcdn.com/glutebridge.jpg",
+    qrDemo: "https://www.youtube.com/watch?v=8bbE64NuDTU",
+    steps: [
+      { caption: "Lie flat on back", imageB64: "https://yourcdn.com/glutebridge-step1.jpg" },
+      { caption: "Lift hips up", imageB64: "https://yourcdn.com/glutebridge-step2.jpg" },
+      { caption: "Squeeze glutes", imageB64: "https://yourcdn.com/glutebridge-step3.jpg" }
+    ]
+  }
   ]);
 
   const handleChange = (e) => {
@@ -98,13 +205,36 @@ Include:
       setStatus("error");
     }
   };
-
+const chartData = {
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  datasets: [
+    {
+      label: "Calories Burned",
+      data: [500, 640, 720, 560, 610, 780, 700],
+      borderColor: "blue",
+      fill: false,
+    },
+  ],
+};
   const canDownload = status === "ready" && !!plan && !downloading;
 
+    useEffect(() => {
+    if (chartRef.current) {
+      setIsChartReady(true);
+    }
+  }, [chartRef]);
   const handleDownloadPDF = async () => {
     if (!canDownload) return;
-    setDownloading(true);
+  setDownloading(true);
+
+  if (!chartRef.current) {
+    console.error("Chart is not ready yet");
+    setDownloading(false);
+    return;
+  }
     try {
+     const chartCanvas = chartRef.current.canvas;
+    const chartDataUrl = chartCanvas.toDataURL("image/png");
       const payload = {
         user: {
           name: formData.name || "User",
@@ -203,7 +333,7 @@ Include:
           </div>
 
           <div className="hlv-row">
-            <input name="bmi" placeholder="BMI" value={bmi} onChange={handleChange} className="hlv-input" disabled/>
+            <input name="bmi" placeholder="BMI"  value={bmi ?? ""}  onChange={handleChange} className="hlv-input" readOnly/>
             <input name="dietType" placeholder="Diet Type" value={formData.dietType} onChange={handleChange} className="hlv-input" />
             <input name="goal" placeholder="Main goal (e.g., Fat loss)" value={formData.goal} onChange={handleChange} className="hlv-input" />
           </div>
@@ -253,6 +383,9 @@ Include:
             <h3>Personalized Plan</h3>
             <div className="hlv-plan-content">
               <ReactMarkdown>{plan}</ReactMarkdown>
+               <div style={{ maxWidth: "600px", marginTop: "20px" }}>
+          <Line ref={chartRef} data={chartData} />
+        </div>
             </div>
           </div>
         )}

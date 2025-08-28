@@ -59,21 +59,21 @@ export default function Login() {
     <div className="auth-container">
       <div className='auth-wrapper'>
         <div className='main-signup'>
-          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'black' }}>
             <Image src={appLogo} width={36} height={38} style={{ borderRadius: '50%' }} alt='App Name' />
             Healieve
           </h3>
-          <h2>Welcome Back</h2>
+          <h2 style={{color: 'black'}}>Welcome Back</h2>
           <div className='signup-form'>
             <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
             <button className='signup-btn' onClick={handleLogin}>LOGIN</button>
-            <span>------------Or------------</span>
+            <span style={{color: 'black'}}>------------Or------------</span>
             <button className='google-btn' onClick={handleGoogleLogin}>
               <Image src={googleLogo} alt="Google" width={30} height={30} />
               Continue with Google
             </button>
-            <p>Don’t have an account? <Link href="/signup">Sign up</Link></p>
+            <p style={{color: 'black'}}>Don’t have an account? <Link href="/signup">Sign up</Link></p>
           </div>
         </div>
         <div className='signup-img-container'>
