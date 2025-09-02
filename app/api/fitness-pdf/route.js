@@ -3,7 +3,7 @@ import { calcBMI, calcBMR, calcTDEE, macroSplit } from "@/utils/healthCalc";
 import { marked } from "marked";
 
 
-const EXPRESS_ENDPOINT = `http://localhost:6001/generate-pdf`;
+const EXPRESS_ENDPOINT = `https://api.cloudflare.com/client/v4/accounts/20086234765f3b3f80f4e3ac14090e14/browser-rendering/pdf`;
 
 async function embedExercises(exercises = []) {
   const out = [];
@@ -273,6 +273,7 @@ export async function POST(req) {
                 headers: {
                     'User-Agent': 'undici-stream-example',
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer BbV8F4oBAx5Z0MnPMokqVIpOC2_gPtzwG513gEQU`
                 },
                 body: JSON.stringify({ html }),
             }
