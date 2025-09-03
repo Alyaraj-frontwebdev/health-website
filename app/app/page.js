@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 const tabs = [
   { id: 'health', label: 'Health Advisor', component: <GeminiChat /> },
   { id: 'fitness', label: 'Fitness Planner', component: <FitnessGoal /> },
-  { id: 'weather', label: 'AOI Advisor', component: <WeatherAdvice /> },
+  { id: 'weather', label: 'AQI Advisor', component: <WeatherAdvice /> },
 ];
 
 export default function AppPage() {
